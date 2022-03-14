@@ -37,7 +37,9 @@ module.exports = (env) => {
         },
 
         plugins: [
-            new HtmlWebpackPlugin(),
+            new HtmlWebpackPlugin({
+				template: 'assets/index.html'
+			}),
             new CopyPlugin({
                 patterns: [
                     {

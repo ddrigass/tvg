@@ -2,6 +2,7 @@ import { Application, Sprite, Texture, Container } from "pixi.js";
 import "../style.css";
 import GameMap from "./GameMap";
 import Player from "./Player";
+import Menu from "./Menu";
 
 declare const VERSION: string;
 
@@ -18,6 +19,7 @@ class Game {
     private drag: any;
 	private player: Player;
 	public gameMap: GameMap;
+	private menu: Menu;
     constructor() {
         this.options = {
             fps: 60,
@@ -37,11 +39,13 @@ class Game {
 
         this.gameMap = new GameMap(this);
 		this.player = new Player(this)
+		this.menu = new Menu(this);
 
 		this.app.stage.addChild(this.gameMap.container)
 
 		if (this.player.pixiObject)
 			this.gameMap.container.addChild(this.player.pixiObject)
+
 
         // @ts-ignore
         window.$GAME = this;
