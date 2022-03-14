@@ -2,31 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="91572f67-6895-4bf7-801b-b71892875afc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/dependabot.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build-macos.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build-ubuntu.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build-windows.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.husky/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.husky/pre-commit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.swcrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/index.test.ts" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/elements/landscape/tree.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/elements/players/player.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/elements/tiles/grass.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Game.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/GameMap.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Player.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/mapElements/MapElement.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/mapElements/Tile.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/mapElements/Tree.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/bunny_blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/bunny_green.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/simpleSpriteSheet.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/simpleSpriteSheet.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/spine-assets/pixie.atlas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/spine-assets/pixie.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/spine-assets/pixie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/stone.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/elements/tiles/stone.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/map.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="tsconfig.json" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="23WDhQoCoAQyiLKFUU4cl9KWUa2" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -36,7 +62,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -48,7 +74,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets" />
       <recent name="$PROJECT_DIR$/assets" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\players" />
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\landscape" />
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\tiles" />
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\src\components\mapElements" />
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\src\components" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -64,7 +98,8 @@
       <workItem from="1641902605614" duration="606000" />
       <workItem from="1641926092257" duration="6029000" />
       <workItem from="1641986036217" duration="14965000" />
-      <workItem from="1647087157566" duration="348000" />
+      <workItem from="1647087157566" duration="8532000" />
+      <workItem from="1647280782316" duration="10039000" />
     </task>
     <servers />
   </component>
