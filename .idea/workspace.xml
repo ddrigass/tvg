@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91572f67-6895-4bf7-801b-b71892875afc" name="Changes" comment="game menu added (primitive)">
-      <change afterPath="$PROJECT_DIR$/assets/elements/inventory/wood.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/inventory/Inventory.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/inventory/InventoryItem.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
+    <list default="true" id="91572f67-6895-4bf7-801b-b71892875afc" name="Changes" comment="added inventory&#10;updated logics">
+      <change afterPath="$PROJECT_DIR$/src/Action.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Game.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/GameMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GameMap.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Menu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/menuElements/Menu.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Player.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Player.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/mapElements/MapElement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/MapElement.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/mapElements/Tile.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/Tile.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/mapElements/Tree.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/Tree.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647297253629</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added inventory&#10;updated logics">
+      <created>1647466554902</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1647466554902</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,6 +133,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactored" />
     <MESSAGE value="game menu added (primitive)" />
-    <option name="LAST_COMMIT_MESSAGE" value="game menu added (primitive)" />
+    <MESSAGE value="added inventory&#10;updated logics" />
+    <option name="LAST_COMMIT_MESSAGE" value="added inventory&#10;updated logics" />
   </component>
 </project>

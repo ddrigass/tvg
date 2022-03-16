@@ -9,9 +9,9 @@ declare const VERSION: string;
 
 console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
 
-interface GameOption {
-    width: number;
-    height: number;
+export interface Position {
+	x: number;
+	y: number;
 }
 
 class Game {

@@ -1,5 +1,6 @@
 import { game } from '../../index'
 import { Sprite, Texture } from "pixi.js";
+import { Position } from "../Game";
 
 export enum MAP_ELEMENT_TYPE {
 	BACKGROUND,
@@ -7,16 +8,12 @@ export enum MAP_ELEMENT_TYPE {
 	FOREGROUND
 }
 
-export interface ElementPosition {
-	x: number;
-	y: number;
-}
 export interface ElementSize {
 	width: number;
 	height: number;
 }
 export interface MapElementOptions {
-	position: ElementPosition,
+	position: Position,
 	type?: MAP_ELEMENT_TYPE;
 	zIndex?: number;
 	image?: string;
@@ -25,7 +22,7 @@ export interface MapElementOptions {
 
 class MapElement {
 	private size: ElementSize;
-	public position: ElementPosition;
+	public position: Position;
 	private image: string;
 	private zIndex: number;
 	pixiObject?: Sprite;
@@ -61,7 +58,7 @@ class MapElement {
 		game.gameMap?.containers[this.type].addChild(element)
 	}
 
-	getPosition(): ElementPosition {
+	getPosition(): Position {
 		if (!this.pixiObject) throw new Error('pixiObject not initialized.')
 		return {
 			x: this.pixiObject?.x / this.defaultTileSize,

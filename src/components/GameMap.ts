@@ -1,8 +1,9 @@
-import Game from "./Game";
+import Game, { Position } from "./Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
 import { Container, ParticleContainer, Sprite, Texture } from "pixi.js";
-import MapElement, { ElementPosition, MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import { Action } from "../Action";
 
 
 interface GameMapOptions {
@@ -145,7 +146,7 @@ class GameMap {
 		}
 	}
 
-	getElementOnPosition(position: ElementPosition) {
+	getElementOnPosition(position: Position) {
 		return this.findInMap(this.options.foreground, (el: MapElement) => {
 			if (!el) return false;
 			return el.position.x === position.x && el.position.y === position.y;
@@ -161,6 +162,19 @@ class GameMap {
 				if (filter(subArray[y])) return subArray[y]
 		}
 		return null
+	}
+
+	checkCollision(position: Position) {
+		const tileSize = this.game.options.tile.size
+		const mapWidth = this.game.options.map.width * tileSize
+		const mapHeight = this.game.options.map.height * tileSize
+		if (
+			(position.x < 0 || position.y < 0)
+			|| (position.x > mapWidth || position.y > mapHeight)
+		) {
+			return new Action({ type: 'exitFromLocation' })
+		}
+		return true;
 	}
 }
 

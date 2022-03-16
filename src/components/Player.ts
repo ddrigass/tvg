@@ -1,5 +1,6 @@
-import Game from "./Game";
+import Game, { Position } from "./Game";
 import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import { Action } from "../Action";
 
 
 interface PlayerMovement {
@@ -40,11 +41,17 @@ class Player extends MapElement {
 		const timestamp = +new Date();
 		if (timestamp < this.lastMovement + 300) return
 		if (this.movement.horizontal !== 0) {
-			this.pixiObject.x += this.movement.horizontal * step
+			this.goTo({
+				x: this.pixiObject.x + this.movement.horizontal * step,
+				y: this.pixiObject.y
+			})
 			this.lastMovement = timestamp;
 		}
 		if (this.movement.vertical !== 0) {
-			this.pixiObject.y += this.movement.vertical * step
+			this.goTo({
+				x: this.pixiObject.x,
+				y: this.pixiObject.y += this.movement.vertical * step
+			})
 			this.lastMovement = timestamp;
 		}
 	}
@@ -96,6 +103,17 @@ class Player extends MapElement {
 		const element = this.game.gameMap?.getElementOnPosition(position)
 		if (!element) return false;
 		element.doAction();
+	}
+
+	private goTo(position: Position) {
+		if (!this.pixiObject) return;
+		const collision = this.game.gameMap?.checkCollision(position)
+		if (collision instanceof Action) {
+			collision.process()
+		}
+		if (collision === true) {
+			this.pixiObject = Object.assign(this.pixiObject, position)
+		}
 	}
 }
 
