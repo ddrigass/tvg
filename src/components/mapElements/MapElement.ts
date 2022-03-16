@@ -1,6 +1,12 @@
 import { game } from '../../index'
 import { Sprite, Texture } from "pixi.js";
 
+export enum MAP_ELEMENT_TYPE {
+	BACKGROUND,
+	NEUTRAL,
+	FOREGROUND
+}
+
 export interface ElementPosition {
 	x: number;
 	y: number;
@@ -11,40 +17,60 @@ export interface ElementSize {
 }
 export interface MapElementOptions {
 	position: ElementPosition,
+	type?: MAP_ELEMENT_TYPE;
 	zIndex?: number;
 	image?: string;
 	size?: ElementSize,
 }
 
-const defaultTileSize = 50;
-
 class MapElement {
 	private size: ElementSize;
-	private position: ElementPosition;
+	public position: ElementPosition;
 	private image: string;
 	private zIndex: number;
 	pixiObject?: Sprite;
+	private type: MAP_ELEMENT_TYPE;
+	private defaultTileSize: number;
 	constructor(options: MapElementOptions) {
+		this.defaultTileSize = game.options.tile.size;
 		this.size = options?.size || {
-			width: defaultTileSize,
-			height: defaultTileSize
+			width: this.defaultTileSize,
+			height: this.defaultTileSize
 		}
 		this.position = options.position
-		this.image = options.image || 'tiles/stone.png'
+		this.image = options.image || ''
 		this.zIndex = options.zIndex || 2
+		this.type = typeof options.type === 'number' ? options.type : MAP_ELEMENT_TYPE.NEUTRAL;
 	}
 	public draw() {
-		const elementTexture = Texture.from("../../assets/elements/"+this.image);
+		let elementTexture;
+		if (this.image) {
+			elementTexture = Texture.from("../../assets/elements/"+this.image);
+		} else {
+			elementTexture = Texture.WHITE;
+		}
 		const element = new Sprite(elementTexture)
 		element.width = this.size.width;
 		element.height = this.size.height;
-		element.x = this.position.x * 50;
-		element.y = this.position.y * 50;
+		element.x = this.position.x * this.defaultTileSize;
+		element.y = this.position.y * this.defaultTileSize;
 		element.zIndex = this.zIndex;
 
 		this.pixiObject = element;
 
-		game.gameMap.container.addChild(element)
+		game.gameMap?.containers[this.type].addChild(element)
+	}
+
+	getPosition(): ElementPosition {
+		if (!this.pixiObject) throw new Error('pixiObject not initialized.')
+		return {
+			x: this.pixiObject?.x / this.defaultTileSize,
+			y: this.pixiObject?.y / this.defaultTileSize,
+		}
+	}
+
+	doAction() {
+		console.log('doAction')
 	}
 }
 

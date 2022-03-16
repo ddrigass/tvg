@@ -1,7 +1,8 @@
 import Game from "./Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
-import { Container, Sprite, Texture } from "pixi.js";
+import { Container, ParticleContainer, Sprite, Texture } from "pixi.js";
+import MapElement, { ElementPosition, MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 
 
 interface GameMapOptions {
@@ -13,6 +14,7 @@ interface GameMapOptions {
 class GameMap {
 	private game: Game;
 	private options: GameMapOptions;
+	containers: any;
 	container: Container;
 	constructor(game: Game) {
 		this.game = game;
@@ -22,11 +24,24 @@ class GameMap {
 			dragged: false
 		};
 
+		this.onMouseDown = this.onMouseDown.bind(this)
+		this.onMouseUp = this.onMouseUp.bind(this)
+		this.onMouseMove = this.onMouseMove.bind(this)
+
 		this.initDragEvents();
 		this.fillMap()
+		this.containers = {};
+
+		const maxSize = (this.game.options.map.height + this.game.options.map.width) * 50 * 50;
+		this.containers[MAP_ELEMENT_TYPE.NEUTRAL] = new Container();
+		this.containers[MAP_ELEMENT_TYPE.BACKGROUND] = new ParticleContainer(maxSize, {});
+		this.containers[MAP_ELEMENT_TYPE.FOREGROUND] = new Container();
 
 		this.container = new Container();
-		this.container.sortableChildren = true;
+		for (let i in this.containers) {
+			const container = this.containers[i]
+			this.container.addChild(container)
+		}
 	}
 
 	private loadMap() {
@@ -42,36 +57,57 @@ class GameMap {
 		for (let row of background) {
 			for (let m = 0; m < row.length; m++) {
 				const element = row[m];
-				element.draw();
+				element?.draw();
 			}
 		}
 
 		for (let row of foreground) {
 			for (let m = 0; m < row.length; m++) {
 				const element = row[m];
-				element.draw();
+				element?.draw();
 			}
+		}
+
+		// const fill = new Sprite(Texture.WHITE);
+		// fill.x = 0
+		// fill.y = 0
+		// fill.width = this.container.width
+		// fill.height = this.container.height
+		// fill.tint = 0x00A300;
+		// this.container.addChild(fill)
+	}
+
+	initDragEvents() {
+		// document.addEventListener('keydown', (e) => {
+		// 	if (e.code === 'Space') {
+		// 		this.logMap();
+		// 	}
+		// });
+		this.options.dragged = false;
+		document.addEventListener('mousedown', this.onMouseDown);
+		document.addEventListener('mouseup', this.onMouseUp);
+		document.addEventListener('mousemove', this.onMouseMove);
+	}
+
+	onMouseMove(e:MouseEvent) {
+		if (this.options.dragged) {
+			this.container.x += e.movementX
+			this.container.y += e.movementY
 		}
 	}
 
-	private initDragEvents() {
-		document.addEventListener('keydown', (e) => {
-			if (e.code === 'Space') {
-				this.logMap();
-			}
-		});
-		document.addEventListener('mousedown', (e) => {
-			this.options.dragged = true;
-		});
-		document.addEventListener('mouseup', (e) => {
-			this.options.dragged = false;
-		});
-		document.addEventListener('mousemove', (e) => {
-			if (this.options.dragged) {
-				this.container.x += e.movementX
-				this.container.y += e.movementY
-			}
-		});
+	onMouseUp(e:MouseEvent) {
+		this.options.dragged = false;
+	}
+
+	onMouseDown(e:MouseEvent) {
+		this.options.dragged = true;
+	}
+
+	removeDragEvents() {
+		document.removeEventListener('mousedown', this.onMouseDown);
+		document.removeEventListener('mouseup', this.onMouseUp);
+		document.removeEventListener('mousemove', this.onMouseMove);
 	}
 
 	private logMap() {
@@ -90,7 +126,7 @@ class GameMap {
 					y: i,
 				}
 				const tile = new Tile({
-					type: 'grass',
+					tileType: 'grass',
 					position
 				})
 
@@ -98,12 +134,33 @@ class GameMap {
 
 				if (hasTree)
 					foregroundRow.push(new Tree({ position }))
+				else
+					foregroundRow.push(null)
+
 
 				backgroundRow.push(tile)
 			}
 			this.options.background.push(backgroundRow);
 			this.options.foreground.push(foregroundRow);
 		}
+	}
+
+	getElementOnPosition(position: ElementPosition) {
+		return this.findInMap(this.options.foreground, (el: MapElement) => {
+			if (!el) return false;
+			return el.position.x === position.x && el.position.y === position.y;
+		})
+	}
+
+	findInMap(arr:[[]], filter:Function):MapElement | null {
+		for (let i = 0; i < arr.length; i++) {
+			const subArray = arr[i];
+			if (!Array.isArray(subArray)) return null;
+
+			for (let y = 0; y< subArray.length; y++)
+				if (filter(subArray[y])) return subArray[y]
+		}
+		return null
 	}
 }
 

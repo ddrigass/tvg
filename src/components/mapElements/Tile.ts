@@ -1,14 +1,15 @@
-import MapElement, { MapElementOptions } from "./MapElement";
+import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "./MapElement";
 
 interface TileOptions extends MapElementOptions {
-	type: String;
+	tileType: String;
 }
 
 class Tile extends MapElement {
 	constructor(options : TileOptions) {
 		super({
 			...options,
-			image: `tiles/${options.type}.png`
+			image: `tiles/${options.tileType}.png`,
+			type: MAP_ELEMENT_TYPE.BACKGROUND
 		});
 	}
 	// draw() {

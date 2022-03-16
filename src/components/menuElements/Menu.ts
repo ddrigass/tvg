@@ -1,4 +1,4 @@
-import Game from "./Game";
+import Game from "../Game";
 
 class Menu {
 	private element: Element | null;

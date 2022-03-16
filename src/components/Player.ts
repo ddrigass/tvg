@@ -1,5 +1,5 @@
 import Game from "./Game";
-import MapElement from "./mapElements/MapElement";
+import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 
 
 interface PlayerMovement {
@@ -19,6 +19,7 @@ class Player extends MapElement {
 				y: 0
 			},
 			zIndex: 2,
+			type: MAP_ELEMENT_TYPE.NEUTRAL
 		});
 		this.movement = {
 			horizontal: 0,
@@ -26,6 +27,9 @@ class Player extends MapElement {
 		}
 		this.lastMovement = 0;
 		this.game = game;
+
+		this.onKeyDown = this.onKeyDown.bind(this)
+		this.onKeyUp = this.onKeyUp.bind(this)
 		this.initControlsEvents();
 	}
 
@@ -45,35 +49,53 @@ class Player extends MapElement {
 		}
 	}
 
+	removeControlsEvent() {
+		document.removeEventListener('keydown', this.onKeyDown)
+	}
+
 	initControlsEvents() {
-		document.addEventListener('keydown', e => {
-			if (e.code === 'KeyW') {
-				this.movement.vertical = -1
-			}
-			if (e.code === 'KeyS') {
-				this.movement.vertical = 1
-			}
-			if (e.code === 'KeyA') {
-				this.movement.horizontal = -1
-			}
-			if (e.code === 'KeyD') {
-				this.movement.horizontal = 1
-			}
-		})
-		document.addEventListener('keyup', e => {
-			if (e.code === 'KeyW') {
-				this.movement.vertical = 0
-			}
-			if (e.code === 'KeyS') {
-				this.movement.vertical = 0
-			}
-			if (e.code === 'KeyA') {
-				this.movement.horizontal = 0
-			}
-			if (e.code === 'KeyD') {
-				this.movement.horizontal = 0
-			}
-		})
+		document.addEventListener('keydown', this.onKeyDown)
+		document.addEventListener('keyup', this.onKeyUp )
+	}
+
+	onKeyDown(e: KeyboardEvent)  {
+		if (e.code === 'KeyW') {
+			this.movement.vertical = -1
+		}
+		if (e.code === 'KeyS') {
+			this.movement.vertical = 1
+		}
+		if (e.code === 'KeyA') {
+			this.movement.horizontal = -1
+		}
+		if (e.code === 'KeyD') {
+			this.movement.horizontal = 1
+		}
+		if (e.code === 'Space') {
+			this.doAction();
+		}
+	}
+
+	onKeyUp(e: KeyboardEvent) {
+		if (e.code === 'KeyW') {
+			this.movement.vertical = 0
+		}
+		if (e.code === 'KeyS') {
+			this.movement.vertical = 0
+		}
+		if (e.code === 'KeyA') {
+			this.movement.horizontal = 0
+		}
+		if (e.code === 'KeyD') {
+			this.movement.horizontal = 0
+		}
+	}
+
+	doAction() {
+		const position = this.getPosition();
+		const element = this.game.gameMap?.getElementOnPosition(position)
+		if (!element) return false;
+		element.doAction();
 	}
 }
 

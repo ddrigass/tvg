@@ -2,12 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="91572f67-6895-4bf7-801b-b71892875afc" name="Changes" comment="game menu added (primitive)">
-      <change afterPath="$PROJECT_DIR$/assets/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Menu.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/elements/inventory/wood.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/inventory/Inventory.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/inventory/InventoryItem.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GameMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GameMap.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Menu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/menuElements/Menu.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Player.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Player.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/mapElements/MapElement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/MapElement.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/mapElements/Tile.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/Tile.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/mapElements/Tree.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/mapElements/Tree.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +24,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="tsconfig.json" />
-        <option value="TypeScript File" />
         <option value="HTML File" />
         <option value="CSS File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -51,7 +57,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets/elements/inventory" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -64,15 +70,16 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\inventory" />
       <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets" />
       <recent name="$PROJECT_DIR$/assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\src\components\menuElements" />
       <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets" />
       <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg" />
       <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\players" />
       <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\landscape" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\ddri\Repos\tvg\assets\elements\tiles" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
