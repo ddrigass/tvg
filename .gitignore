@@ -3,4 +3,4 @@ coverage
 dist/*
 .cache
 .env
-.idea
+.idea/
