@@ -4,6 +4,7 @@ import Tree from "./mapElements/Tree";
 import { Container, ParticleContainer, Sprite, Texture } from "pixi.js";
 import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 import { Action } from "../Action";
+import config from "../config";
 
 
 interface GameMapOptions {
@@ -79,11 +80,17 @@ class GameMap {
 	}
 
 	initDragEvents() {
-		// document.addEventListener('keydown', (e) => {
-		// 	if (e.code === 'Space') {
-		// 		this.logMap();
-		// 	}
-		// });
+		document.addEventListener('keydown', (e) => {
+			if (e.code === 'Space') {
+				this.logMap();
+			}
+			if (e.code === 'KeyG') {
+				console.log({
+					x: this.container.x,
+					y: this.container.y
+				})
+			}
+		});
 		this.options.dragged = false;
 		document.addEventListener('mousedown', this.onMouseDown);
 		document.addEventListener('mouseup', this.onMouseUp);
@@ -165,7 +172,7 @@ class GameMap {
 	}
 
 	checkCollision(position: Position) {
-		const tileSize = this.game.options.tile.size
+		const tileSize = config.game.tileSize
 		const mapWidth = this.game.options.map.width * tileSize
 		const mapHeight = this.game.options.map.height * tileSize
 		if (

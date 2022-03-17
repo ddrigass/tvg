@@ -1,6 +1,7 @@
 import Game, { Position } from "./Game";
 import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 import { Action } from "../Action";
+import config from "../config";
 
 
 interface PlayerMovement {
@@ -35,8 +36,7 @@ class Player extends MapElement {
 	}
 
 	gameLoop(delta:number) {
-		if (!this.pixiObject) return;
-		const step = this.game.options.tile.size;
+		const step = config.game.tileSize;
 		// const step = delta * 2;
 		const timestamp = +new Date();
 		if (timestamp < this.lastMovement + 300) return
@@ -106,13 +106,37 @@ class Player extends MapElement {
 	}
 
 	private goTo(position: Position) {
-		if (!this.pixiObject) return;
 		const collision = this.game.gameMap?.checkCollision(position)
 		if (collision instanceof Action) {
 			collision.process()
 		}
 		if (collision === true) {
 			this.pixiObject = Object.assign(this.pixiObject, position)
+		}
+
+		this.moveMapOnLeaveFromVisible()
+	}
+
+	private moveMapOnLeaveFromVisible() {
+		const playerWidth = this.pixiObject.width;
+		const playerHeight = this.pixiObject.height;
+		const playerXInGame = this.pixiObject.x
+		const playerYInGame = this.pixiObject.y + this.pixiObject.height
+		const mapX = -(this.game.gameMap.container.x);
+		const mapY =  -(this.game.gameMap.container.y);
+		const mapWidth = this.game.app.renderer.width;
+		const mapHeight = this.game.app.renderer.height;
+		if (playerXInGame - playerWidth < mapX) {
+			this.game.gameMap.container.x = -(playerXInGame - mapWidth/2);
+		}
+		if (playerXInGame + playerWidth > mapX + mapWidth) {
+			this.game.gameMap.container.x = -(playerXInGame - mapWidth/2);
+		}
+		if (playerYInGame - playerHeight < mapY) {
+			this.game.gameMap.container.y = -(playerYInGame - mapHeight/2);
+		}
+		if (playerYInGame + playerHeight > mapY + mapHeight) {
+			this.game.gameMap.container.y = -(playerYInGame - mapHeight/2);
 		}
 	}
 }

@@ -3,7 +3,7 @@ import "../style.css";
 import GameMap from "./GameMap";
 import Player from "./Player";
 import Menu from "./menuElements/Menu";
-import Inventory from "./inventory/Inventory";
+import Inventory from "./interface/Inventory";
 
 declare const VERSION: string;
 
@@ -17,19 +17,16 @@ export interface Position {
 class Game {
     app: Application;
     public options: any;
-	player?: Player;
-	public gameMap?: GameMap;
+	player: Player;
+	public gameMap: GameMap;
 	private menu?: Menu;
-	inventory?: Inventory;
+	inventory: Inventory;
     constructor() {
         this.options = {
             fps: 60,
             map: {
                 width: 100,
                 height: 100
-            },
-            tile: {
-                size: 50
             }
         };
 		settings.SORTABLE_CHILDREN = true;
@@ -41,13 +38,13 @@ class Game {
 
         // @ts-ignore
         window.$GAME = this;
-    }
-    init() {
+
 		this.gameMap = new GameMap(this);
 		this.player = new Player(this)
 		this.menu = new Menu(this);
 		this.inventory = new Inventory(this);
-
+    }
+    init() {
 		this.app.stage.addChild(this.gameMap.container)
 		this.app.stage.addChild(this.inventory.container)
 

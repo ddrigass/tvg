@@ -1,6 +1,7 @@
 import { game } from '../../index'
 import { Sprite, Texture } from "pixi.js";
 import { Position } from "../Game";
+import config from "../../config";
 
 export enum MAP_ELEMENT_TYPE {
 	BACKGROUND,
@@ -25,11 +26,11 @@ class MapElement {
 	public position: Position;
 	private image: string;
 	private zIndex: number;
-	pixiObject?: Sprite;
+	pixiObject: Sprite;
 	private type: MAP_ELEMENT_TYPE;
 	private defaultTileSize: number;
 	constructor(options: MapElementOptions) {
-		this.defaultTileSize = game.options.tile.size;
+		this.defaultTileSize = config.game.tileSize;
 		this.size = options?.size || {
 			width: this.defaultTileSize,
 			height: this.defaultTileSize
@@ -38,6 +39,7 @@ class MapElement {
 		this.image = options.image || ''
 		this.zIndex = options.zIndex || 2
 		this.type = typeof options.type === 'number' ? options.type : MAP_ELEMENT_TYPE.NEUTRAL;
+		this.pixiObject = new Sprite();
 	}
 	public draw() {
 		let elementTexture;

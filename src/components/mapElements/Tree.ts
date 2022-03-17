@@ -1,6 +1,6 @@
 import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "./MapElement";
 import { game } from "../../index";
-import { InventoryItem } from "../inventory/InventoryItem";
+import { InventoryItem } from "../interface/InventoryItem";
 
 interface TreeOptions extends MapElementOptions {
 }

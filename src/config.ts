@@ -1,11 +1,14 @@
 export default {
-	"inventory": {
-		"items": [
+	inventory: {
+		items: [
 			{
-				"name":"wood",
-				"image": "wood.png"
+				name:"wood",
+				image: "wood.png"
 			}
 		],
-		"itemSize": 50,
-	}
+		itemSize: 50,
+	},
+	game: {
+		tileSize: 50
+	},
 }

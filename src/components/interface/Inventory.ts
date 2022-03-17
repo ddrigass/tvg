@@ -2,27 +2,12 @@ import { Container, Graphics, ParticleContainer, Sprite, Text } from "pixi.js";
 import Game from "../Game";
 import { InventoryItem } from "./InventoryItem";
 import config from "../../config";
+import { InterfaceWindow } from "./InterfaceWindow";
 
-interface InventoryOptions {
-	inventoryWindow: {
-		bgColor: number;
-	};
-}
-
-class Inventory {
-	container: Container;
-	private game: Game;
-	private options: InventoryOptions;
+class Inventory extends InterfaceWindow {
 	private items: InventoryItem[];
 	constructor(game: Game) {
-		this.options = {
-			inventoryWindow: {
-				bgColor: 0xFFFFFF
-			}
-		}
-		this.game = game;
-		this.container = new Container();
-		this.container.visible = false
+		super(game);
 		this.items = [];
 		this.initEvents()
 	}
