@@ -20,20 +20,15 @@ class Inventory extends InterfaceWindow {
 	private initEvents() {
 		document.addEventListener('keydown', e => {
 			if (e.code === 'KeyI') {
-				this.container.visible = !this.container.visible
 				if (this.container.visible) {
-					this.game.gameMap?.removeDragEvents()
-					this.game.player?.removeControlsEvent()
+					this.hide();
 				} else {
-					this.game.gameMap?.initDragEvents()
-					this.game.player?.initControlsEvents()
+					this.show();
 				}
 			}
 		})
-		window.addEventListener('resize', e => {
-			this.draw()
-		})
 	}
+
 
 	private drawInventory() {
 		const inventoryItems = new Container()
@@ -53,8 +48,20 @@ class Inventory extends InterfaceWindow {
 		})?.addCount(item.count);
 		if (!addedToExist)
 			this.items.push(item)
+	}
 
+	private hide() {
+		this.container.visible = false;
+		this.game.gameMap?.initDragEvents()
+		this.game.player?.initControlsEvents()
+	}
+
+	private show() {
 		this.draw();
+		this.container.visible = true;
+
+		this.game.gameMap.removeDragEvents()
+		this.game.player.removeControlsEvent()
 	}
 }
 

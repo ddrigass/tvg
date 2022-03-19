@@ -29,12 +29,15 @@ class Tree extends MapElement {
 
 	doAction() {
 		super.doAction();
-		this.visible = false;
 
 		const wood = new InventoryItem({
 			name: 'wood',
 		})
 		game.inventory?.addItem(wood)
+
+		this.destroy();
+
+		game.gameMap.containers[MAP_ELEMENT_TYPE.FOREGROUND].removeChild(this)
 	}
 }
 

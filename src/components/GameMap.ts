@@ -2,10 +2,9 @@ import Game, { Position } from "./Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
 import { Container, DisplayObject, ParticleContainer, Sprite, Texture } from "pixi.js";
-import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 import { Action } from "../Action";
 import config from "../config";
-import timer from "../utils/timer";
 
 
 interface GameMapOptions {
@@ -71,14 +70,6 @@ class GameMap {
 				element?.draw();
 			}
 		}
-
-		// const fill = new Sprite(Texture.WHITE);
-		// fill.x = 0
-		// fill.y = 0
-		// fill.width = this.container.width
-		// fill.height = this.container.height
-		// fill.tint = 0x00A300;
-		// this.container.addChild(fill)
 	}
 
 	initDragEvents() {
@@ -156,21 +147,9 @@ class GameMap {
 	}
 
 	getElementOnPosition(position: Position) {
-		return this.findInMap(this.options.foreground, (el: MapElement) => {
-			if (!el) return false;
-			return el.position.x === position.x && el.position.y === position.y;
-		});
-	}
-
-	findInMap(arr: [[]], filter: Function): MapElement | null {
-		for (let i = 0; i < arr.length; i++) {
-			const subArray = arr[i];
-			if (!Array.isArray(subArray)) return null;
-
-			for (let y = 0; y < subArray.length; y++)
-				if (filter(subArray[y])) return subArray[y];
-		}
-		return null;
+		return this.containers[MAP_ELEMENT_TYPE.FOREGROUND].children.find((el: Sprite) => {
+			return el.x === position.x && el.y === position.y
+		})
 	}
 
 	checkCollision(position: Position) {
@@ -215,6 +194,42 @@ class GameMap {
 
 	getDistance(posA: Position, posB: Position): number {
 		return Math.sqrt( (posB.x - posA.x) ** 2 + (posB.y - posA.y) ** 2);
+	}
+
+
+	async moveOnLeaveFromVisible() {
+		const playerWidth = this.game.player.width;
+		const playerHeight = this.game.player.height;
+		const playerXInGame = this.game.player.x
+		const playerYInGame = this.game.player.y
+		const mapX = -(this.container.x);
+		const mapY = -(this.container.y);
+		const mapWidth = this.game.app.renderer.width;
+		const mapHeight = this.game.app.renderer.height;
+		if (playerXInGame - playerWidth < mapX) {
+			await this.moveTo({
+				x: -(playerXInGame - mapWidth / 2),
+				y: -mapY,
+			});
+		}
+		if (playerXInGame + playerWidth > mapX + mapWidth) {
+			await this.moveTo({
+				x: -(playerXInGame - mapWidth / 2),
+				y: -mapY,
+			});
+		}
+		if (playerYInGame - playerHeight < mapY) {
+			await this.game.gameMap.moveTo({
+				x: -mapX,
+				y: -(playerYInGame - mapHeight / 2),
+			});
+		}
+		if (playerYInGame + playerHeight > mapY + mapHeight) {
+			await this.game.gameMap.moveTo({
+				x: -mapX,
+				y: -(playerYInGame - mapHeight / 2),
+			});
+		}
 	}
 }
 

@@ -45,7 +45,7 @@ class Player extends MapElement {
 		if (timestamp < this.lastMovement + 5) return
 		if (this.movement.horizontal !== 0) {
 			this.goTo({
-				x: this.x + this.movement.horizontal * 3,
+				x: this.x + this.movement.horizontal * 3 * delta,
 				y: this.y
 			})
 			this.lastMovement = timestamp;
@@ -53,7 +53,7 @@ class Player extends MapElement {
 		if (this.movement.vertical !== 0) {
 			this.goTo({
 				x: this.x,
-				y: this.y += this.movement.vertical * 3
+				y: this.y + this.movement.vertical * 3 * delta
 			})
 			this.lastMovement = timestamp;
 		}
@@ -110,6 +110,7 @@ class Player extends MapElement {
 		const element = this.game.gameMap?.getElementOnPosition(position)
 		if (!element) return false;
 		element.doAction();
+		this.nearestObject = null;
 	}
 
 	private async goTo(position: Position) {
@@ -123,42 +124,7 @@ class Player extends MapElement {
 			this.highlightNearObject()
 		}
 
-		await this.moveMapOnLeaveFromVisible()
-	}
-
-	private async moveMapOnLeaveFromVisible() {
-		const playerWidth = this.width;
-		const playerHeight = this.height;
-		const playerXInGame = this.x
-		const playerYInGame = this.y
-		const mapX = -(this.game.gameMap.container.x);
-		const mapY = -(this.game.gameMap.container.y);
-		const mapWidth = this.game.app.renderer.width;
-		const mapHeight = this.game.app.renderer.height;
-		if (playerXInGame - playerWidth < mapX) {
-			await this.game.gameMap.moveTo({
-				x: -(playerXInGame - mapWidth / 2),
-				y: -mapY,
-			});
-		}
-		if (playerXInGame + playerWidth > mapX + mapWidth) {
-			await this.game.gameMap.moveTo({
-				x: -(playerXInGame - mapWidth / 2),
-				y: -mapY,
-			});
-		}
-		if (playerYInGame - playerHeight < mapY) {
-			await this.game.gameMap.moveTo({
-				x: -mapX,
-				y: -(playerYInGame - mapHeight / 2),
-			});
-		}
-		if (playerYInGame + playerHeight > mapY + mapHeight) {
-			await this.game.gameMap.moveTo({
-				x: -mapX,
-				y: -(playerYInGame - mapHeight / 2),
-			});
-		}
+		await this.game.gameMap.moveOnLeaveFromVisible()
 	}
 
 	private highlightNearObject() {
