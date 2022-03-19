@@ -198,6 +198,8 @@ class GameMap {
 
 
 	async moveOnLeaveFromVisible() {
+		if (this.options.dragged) return;
+
 		const playerWidth = this.game.player.width;
 		const playerHeight = this.game.player.height;
 		const playerXInGame = this.game.player.x
