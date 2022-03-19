@@ -24,13 +24,12 @@ class Tree extends MapElement {
 
 	draw() {
 		super.draw();
-		this.pixiObject?.anchor.set(0, 0.3)
+		this.anchor.set(0, 0.3)
 	}
 
 	doAction() {
 		super.doAction();
-		if (!this.pixiObject) return
-		this.pixiObject.visible = false;
+		this.visible = false;
 
 		const wood = new InventoryItem({
 			name: 'wood',

@@ -48,8 +48,7 @@ class Game {
 		this.app.stage.addChild(this.gameMap.container)
 		this.app.stage.addChild(this.inventory.container)
 
-		if (this.player.pixiObject)
-			this.gameMap.container.addChild(this.player.pixiObject)
+		this.gameMap.container.addChild(this.player)
 
 		this.gameMap.draw()
 		this.player.draw()

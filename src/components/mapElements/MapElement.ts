@@ -21,50 +21,38 @@ export interface MapElementOptions {
 	size?: ElementSize,
 }
 
-class MapElement {
+class MapElement extends Sprite {
 	private size: ElementSize;
-	public position: Position;
-	private image: string;
-	private zIndex: number;
-	pixiObject: Sprite;
+	public mapPosition: Position;
+	image: string;
 	private type: MAP_ELEMENT_TYPE;
-	private defaultTileSize: number;
+	defaultTileSize: number;
 	constructor(options: MapElementOptions) {
+		const texture = options.image ? Texture.from("../../assets/elements/"+options.image) : Texture.WHITE;
+		super(texture);
 		this.defaultTileSize = config.game.tileSize;
 		this.size = options?.size || {
 			width: this.defaultTileSize,
 			height: this.defaultTileSize
 		}
-		this.position = options.position
+		this.mapPosition = options.position
 		this.image = options.image || ''
 		this.zIndex = options.zIndex || 2
 		this.type = typeof options.type === 'number' ? options.type : MAP_ELEMENT_TYPE.NEUTRAL;
-		this.pixiObject = new Sprite();
 	}
 	public draw() {
-		let elementTexture;
-		if (this.image) {
-			elementTexture = Texture.from("../../assets/elements/"+this.image);
-		} else {
-			elementTexture = Texture.WHITE;
-		}
-		const element = new Sprite(elementTexture)
-		element.width = this.size.width;
-		element.height = this.size.height;
-		element.x = this.position.x * this.defaultTileSize;
-		element.y = this.position.y * this.defaultTileSize;
-		element.zIndex = this.zIndex;
+		this.width = this.size.width;
+		this.height = this.size.height;
+		this.x = this.mapPosition.x * this.defaultTileSize;
+		this.y = this.mapPosition.y * this.defaultTileSize;
 
-		this.pixiObject = element;
-
-		game.gameMap?.containers[this.type].addChild(element)
+		game.gameMap?.containers[this.type].addChild(this)
 	}
 
 	getPosition(): Position {
-		if (!this.pixiObject) throw new Error('pixiObject not initialized.')
 		return {
-			x: this.pixiObject?.x / this.defaultTileSize,
-			y: this.pixiObject?.y / this.defaultTileSize,
+			x: Math.floor(this.x / this.defaultTileSize),
+			y: Math.floor(this.y / this.defaultTileSize),
 		}
 	}
 

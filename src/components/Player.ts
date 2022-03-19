@@ -2,6 +2,7 @@ import Game, { Position } from "./Game";
 import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
 import { Action } from "../Action";
 import config from "../config";
+import { Sprite } from "pixi.js";
 
 
 interface PlayerMovement {
@@ -13,6 +14,7 @@ class Player extends MapElement {
 	private game: Game;
 	private movement: PlayerMovement;
 	private lastMovement: number;
+	private nearestObject: Sprite | null;
 	constructor(game: Game) {
 		super({
 			image: 'players/player.png',
@@ -28,6 +30,7 @@ class Player extends MapElement {
 			vertical: 0
 		}
 		this.lastMovement = 0;
+		this.nearestObject = null
 		this.game = game;
 
 		this.onKeyDown = this.onKeyDown.bind(this)
@@ -39,18 +42,18 @@ class Player extends MapElement {
 		const step = config.game.tileSize;
 		// const step = delta * 2;
 		const timestamp = +new Date();
-		if (timestamp < this.lastMovement + 300) return
+		if (timestamp < this.lastMovement + 5) return
 		if (this.movement.horizontal !== 0) {
 			this.goTo({
-				x: this.pixiObject.x + this.movement.horizontal * step,
-				y: this.pixiObject.y
+				x: this.x + this.movement.horizontal * 3,
+				y: this.y
 			})
 			this.lastMovement = timestamp;
 		}
 		if (this.movement.vertical !== 0) {
 			this.goTo({
-				x: this.pixiObject.x,
-				y: this.pixiObject.y += this.movement.vertical * step
+				x: this.x,
+				y: this.y += this.movement.vertical * 3
 			})
 			this.lastMovement = timestamp;
 		}
@@ -99,45 +102,74 @@ class Player extends MapElement {
 	}
 
 	doAction() {
-		const position = this.getPosition();
+		if (!this.nearestObject) return false;
+		const position = {
+			x: this.nearestObject.x,
+			y: this.nearestObject.y
+		};
 		const element = this.game.gameMap?.getElementOnPosition(position)
 		if (!element) return false;
 		element.doAction();
 	}
 
-	private goTo(position: Position) {
+	private async goTo(position: Position) {
 		const collision = this.game.gameMap?.checkCollision(position)
 		if (collision instanceof Action) {
 			collision.process()
 		}
 		if (collision === true) {
-			this.pixiObject = Object.assign(this.pixiObject, position)
+			this.x = position.x
+			this.y = position.y
+			this.highlightNearObject()
 		}
 
-		this.moveMapOnLeaveFromVisible()
+		await this.moveMapOnLeaveFromVisible()
 	}
 
-	private moveMapOnLeaveFromVisible() {
-		const playerWidth = this.pixiObject.width;
-		const playerHeight = this.pixiObject.height;
-		const playerXInGame = this.pixiObject.x
-		const playerYInGame = this.pixiObject.y + this.pixiObject.height
+	private async moveMapOnLeaveFromVisible() {
+		const playerWidth = this.width;
+		const playerHeight = this.height;
+		const playerXInGame = this.x
+		const playerYInGame = this.y
 		const mapX = -(this.game.gameMap.container.x);
-		const mapY =  -(this.game.gameMap.container.y);
+		const mapY = -(this.game.gameMap.container.y);
 		const mapWidth = this.game.app.renderer.width;
 		const mapHeight = this.game.app.renderer.height;
 		if (playerXInGame - playerWidth < mapX) {
-			this.game.gameMap.container.x = -(playerXInGame - mapWidth/2);
+			await this.game.gameMap.moveTo({
+				x: -(playerXInGame - mapWidth / 2),
+				y: -mapY,
+			});
 		}
 		if (playerXInGame + playerWidth > mapX + mapWidth) {
-			this.game.gameMap.container.x = -(playerXInGame - mapWidth/2);
+			await this.game.gameMap.moveTo({
+				x: -(playerXInGame - mapWidth / 2),
+				y: -mapY,
+			});
 		}
 		if (playerYInGame - playerHeight < mapY) {
-			this.game.gameMap.container.y = -(playerYInGame - mapHeight/2);
+			await this.game.gameMap.moveTo({
+				x: -mapX,
+				y: -(playerYInGame - mapHeight / 2),
+			});
 		}
 		if (playerYInGame + playerHeight > mapY + mapHeight) {
-			this.game.gameMap.container.y = -(playerYInGame - mapHeight/2);
+			await this.game.gameMap.moveTo({
+				x: -mapX,
+				y: -(playerYInGame - mapHeight / 2),
+			});
 		}
+	}
+
+	private highlightNearObject() {
+		if (this.nearestObject)
+			this.nearestObject.alpha = 1
+		this.nearestObject = this.game.gameMap.getNearObject({
+			x: this.x,
+			y: this.y
+		});
+		if (this.nearestObject)
+			this.nearestObject.alpha = 0.5
 	}
 }
 

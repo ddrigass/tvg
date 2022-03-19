@@ -7,13 +7,13 @@ import { InterfaceWindow } from "./InterfaceWindow";
 class Inventory extends InterfaceWindow {
 	private items: InventoryItem[];
 	constructor(game: Game) {
-		super(game);
+		super(game, 'Inventory');
 		this.items = [];
 		this.initEvents()
 	}
 
 	draw() {
-		this.container.removeChildren();
+		super.draw()
 		this.drawInventory()
 	}
 
@@ -36,38 +36,6 @@ class Inventory extends InterfaceWindow {
 	}
 
 	private drawInventory() {
-		this.container.removeChildren()
-		const inventoryWindow = new Graphics();
-
-		const { innerWidth, innerHeight } = window
-
-		const width = innerWidth * 0.6,
-			height = innerHeight * 0.7,
-			x = innerWidth/2 - width/2,
-			y = innerHeight/2 - height/2;
-
-		this.container.x = x;
-		this.container.y = y;
-		this.container.width = width
-		this.container.height = height
-
-		inventoryWindow.lineStyle(2, this.options.inventoryWindow.bgColor, 1);
-		inventoryWindow.beginFill(this.options.inventoryWindow.bgColor, 0.75);
-		inventoryWindow.drawRoundedRect(0, 0, width, height, 15);
-		inventoryWindow.endFill();
-
-		this.container.addChild(inventoryWindow);
-
-		const title = new Text('Inventory', {
-			fontSize: 30,
-			align: "center"
-		})
-
-		title.x = width/2
-		title.anchor.x = 0.5
-
-		this.container.addChild(title)
-
 		const inventoryItems = new Container()
 		inventoryItems.y = 50
 		this.items.forEach((item, index) => {

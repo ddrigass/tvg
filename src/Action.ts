@@ -12,8 +12,8 @@ export class Action {
 	process() {
 		switch (this.type) {
 			case 'exitFromLocation':
-				if (game.gameMap)
-					game.gameMap.container.visible = false;
+				// if (game.gameMap)
+				// 	game.gameMap.container.visible = false;
 		}
 	}
 }
