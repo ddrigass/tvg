@@ -9,6 +9,9 @@ export default {
 		itemSize: 50,
 	},
 	game: {
-		tileSize: 50
+		tileSize: 50,
+		icons: {
+			cross: ""
+		}
 	},
 }

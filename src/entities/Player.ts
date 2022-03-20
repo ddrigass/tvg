@@ -106,7 +106,6 @@ class Player extends MapElement {
 			y: this.nearestObject.y
 		};
 		const element = this.game.gameMap.getElementOnPosition(position)
-		console.log(element)
 		if (!element) return false;
 		element.doAction();
 		this.nearestObject = null;

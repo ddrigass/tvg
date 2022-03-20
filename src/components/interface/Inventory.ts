@@ -8,6 +8,8 @@ import { Action } from "../../entities/Action";
 class Inventory extends InterfaceWindow {
 	private items: InventoryItem[];
 	private maxItemsCount = 20;
+	private buttons: any = {};
+	private selectedItem: InventoryItem | null = null;
 	constructor(game: Game) {
 		super(game, 'Inventory');
 		this.items = [];
@@ -17,6 +19,7 @@ class Inventory extends InterfaceWindow {
 	draw() {
 		super.draw()
 		this.drawInventory()
+		this.drawButtons();
 	}
 
 	private initEvents() {
@@ -35,7 +38,7 @@ class Inventory extends InterfaceWindow {
 	private drawInventory() {
 		const inventoryItems = new Container()
 		inventoryItems.y = 50
-		this.items.forEach((item, index) => {
+		this.items.forEach((item: InventoryItem, index) => {
 			const countInRow = Math.floor(this.container.width / config.inventory.itemSize);
 			item.pixiObject.x = (index % countInRow) * config.inventory.itemSize
 			item.pixiObject.y = Math.floor(index / countInRow) * config.inventory.itemSize
@@ -64,6 +67,7 @@ class Inventory extends InterfaceWindow {
 		this.container.visible = false;
 		this.game.gameMap?.initDragEvents()
 		this.game.player?.initControlsEvents()
+		this.unselectItem()
 	}
 
 	private show() {
@@ -72,6 +76,63 @@ class Inventory extends InterfaceWindow {
 
 		this.game.gameMap.removeDragEvents()
 		this.game.player.removeControlsEvent()
+	}
+
+	selectItem(item: InventoryItem) {
+		this.unselectItem()
+		const candidate = this.items.find((el: InventoryItem) => el.uuid === item.uuid)
+		if (candidate) {
+			candidate.select();
+			this.selectedItem = candidate
+			this.buttons.removeButton.alpha = 1
+		}
+	}
+
+	unselectItem() {
+		this.selectedItem?.unselect()
+		this.selectedItem = null;
+		this.buttons.removeButton.alpha = 0.5
+	}
+
+	private drawButtons() {
+		const buttons = new Container();
+		const removeButton = new Text('Remove')
+		const divideButton = new Text('Divide')
+		const applyButton = new Text('Apply')
+
+		applyButton.x = 0
+		divideButton.x = 90
+		removeButton.x = 180
+
+		applyButton.interactive = true
+		divideButton.interactive = true
+		removeButton.interactive = true
+
+		applyButton.on('click', () => {
+
+		})
+		divideButton.on('click', () => {
+
+		})
+		removeButton.on('click', () => {
+			this.items = this.items.filter(el => el.uuid !== this.selectedItem?.uuid)
+			this.selectedItem?.remove()
+			this.unselectItem()
+		})
+
+		applyButton.alpha = 0.5
+		divideButton.alpha = 0.5
+		removeButton.alpha = 0.5
+
+		this.buttons.applyButton = applyButton
+		this.buttons.divideButton = divideButton
+		this.buttons.removeButton = removeButton
+
+		buttons.addChild(removeButton, divideButton, applyButton)
+
+		buttons.x = this.container.width - buttons.width - 20
+		buttons.y = this.container.height - buttons.height - 20
+		this.container.addChild(buttons)
 	}
 }
 
