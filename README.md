@@ -19,6 +19,10 @@ Will be opened window in browser, here u can try to play.
 * craft
 * fights
 * other locations (stone world, city's)
-* may be free controls (without bindings to tiles)
+* ✅ may be free controls (without bindings to tiles)
 * multiplayer
 * graphics optimization (chunks, etc.)
+* animations
+* change player skin
+* npc like trader
+* money/resources

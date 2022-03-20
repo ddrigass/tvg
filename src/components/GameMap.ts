@@ -2,30 +2,29 @@ import Game, { Position } from "./Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
 import { Container, DisplayObject, ParticleContainer, Sprite, Texture } from "pixi.js";
-import { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
-import { Action } from "../Action";
+import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import { Action } from "../entities/Action";
 import config from "../config";
 
 
 interface GameMapOptions {
 	dragged: boolean;
-	background: any;
-	foreground: any;
 }
 
 class GameMap {
 	private game: Game;
-	private options: GameMapOptions;
+	options: GameMapOptions;
 	containers: any;
 	container: Container;
+	layers: any;
 
 	constructor(game: Game) {
 		this.game = game;
 		this.options = {
-			background: [],
-			foreground: [],
 			dragged: false,
 		};
+
+		this.layers = {};
 
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseUp = this.onMouseUp.bind(this);
@@ -35,7 +34,7 @@ class GameMap {
 		this.fillMap();
 		this.containers = {};
 
-		const maxSize = (this.game.options.map.height + this.game.options.map.width) * 50 * 50;
+		const maxSize = this.game.options.map.height * this.game.options.map.width * 50;
 		this.containers[MAP_ELEMENT_TYPE.NEUTRAL] = new Container();
 		this.containers[MAP_ELEMENT_TYPE.BACKGROUND] = new ParticleContainer(maxSize, {});
 		this.containers[MAP_ELEMENT_TYPE.FOREGROUND] = new Container();
@@ -47,26 +46,16 @@ class GameMap {
 		}
 	}
 
-	private loadMap() {
-		const mapJson = require("../map.json");
-		this.options.background = mapJson.background;
-		this.options.foreground = mapJson.foreground;
-	}
+	// private loadMap() {
+	// 	const mapJson = require("../map.json");
+	// 	this.options.background = mapJson.background;
+	// 	this.options.foreground = mapJson.foreground;
+	// }
 
 	draw() {
-		const background = this.options.background;
-		const foreground = this.options.foreground;
-
-		for (let row of background) {
-			for (let m = 0; m < row.length; m++) {
-				const element = row[m];
-				element?.draw();
-			}
-		}
-
-		for (let row of foreground) {
-			for (let m = 0; m < row.length; m++) {
-				const element = row[m];
+		for (let i in this.layers) {
+			const layer = this.layers[i]
+			for (let element of layer) {
 				element?.draw();
 			}
 		}
@@ -78,10 +67,7 @@ class GameMap {
 			// 	this.logMap();
 			// }
 			if (e.code === "KeyG") {
-				console.log({
-					x: this.container.x,
-					y: this.container.y,
-				});
+				this.logMap();
 			}
 		});
 		this.options.dragged = false;
@@ -112,15 +98,20 @@ class GameMap {
 	}
 
 	private logMap() {
-		console.log(JSON.stringify(this.options.background));
+		// console.log(JSON.stringify(this.options.background));
 	}
 
 	fillMap() {
 		const height = this.game.options.map.height;
 		const width = this.game.options.map.width;
+
+		for (let layer in MAP_ELEMENT_TYPE) {
+			if (!isNaN(Number(layer))) {
+				this.layers[layer] = [];
+			}
+		}
+
 		for (let i = 0; i < height; i++) {
-			const backgroundRow = [];
-			const foregroundRow = [];
 			for (let t = 0; t < width; t++) {
 				const position = {
 					x: t,
@@ -134,21 +125,17 @@ class GameMap {
 				const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
 
 				if (hasTree)
-					foregroundRow.push(new Tree({ position }));
-				else
-					foregroundRow.push(null);
+					this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new Tree({ position }));
 
 
-				backgroundRow.push(tile);
+				this.layers[MAP_ELEMENT_TYPE.BACKGROUND].push(tile);
 			}
-			this.options.background.push(backgroundRow);
-			this.options.foreground.push(foregroundRow);
 		}
 	}
 
-	getElementOnPosition(position: Position) {
-		return this.containers[MAP_ELEMENT_TYPE.FOREGROUND].children.find((el: Sprite) => {
-			return el.x === position.x && el.y === position.y
+	getElementOnPosition(position: Position): MapElement | null {
+		return this.layers[MAP_ELEMENT_TYPE.FOREGROUND].find((el: MapElement | null) => {
+			return el && el.x === position.x && el.y === position.y
 		})
 	}
 
@@ -170,11 +157,11 @@ class GameMap {
 		this.container = Object.assign(this.container, position);
 	}
 
-	getNearObject(position: Position): Sprite | null {
-		const { children } = this.containers[MAP_ELEMENT_TYPE.FOREGROUND];
-		let nearest: DisplayObject | null = null
+	getNearObject(position: Position): MapElement | null {
+		const layer = this.layers[MAP_ELEMENT_TYPE.FOREGROUND];
+		let nearest: MapElement | null = null
 		let nearestDistance = 0;
-		children.forEach((el: Sprite) => {
+		layer.forEach((el: MapElement) => {
 			const distanceToEl = this.getDistance({
 				x: el.x,
 				y: el.y

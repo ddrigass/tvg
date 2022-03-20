@@ -1,9 +1,10 @@
 import { Application, Container, DisplayObject, settings } from "pixi.js";
 import "../style.css";
 import GameMap from "./GameMap";
-import Player from "./Player";
+import Player from "../entities/Player";
 import Menu from "./menuElements/Menu";
 import Inventory from "./interface/Inventory";
+import { WorldMap } from "./mapElements/WorldMap";
 
 declare const VERSION: string;
 
@@ -21,6 +22,7 @@ class Game {
 	public gameMap: GameMap;
 	private menu?: Menu;
 	inventory: Inventory;
+	worldMap: WorldMap;
     constructor() {
         this.options = {
             fps: 60,
@@ -39,16 +41,20 @@ class Game {
         // @ts-ignore
         window.$GAME = this;
 
+		this.worldMap = new WorldMap(this);
 		this.gameMap = new GameMap(this);
-		this.player = new Player(this)
+		this.player = new Player(this);
 		this.menu = new Menu(this);
 		this.inventory = new Inventory(this);
     }
     init() {
-		this.app.stage.addChild(this.gameMap.container)
-		this.app.stage.addChild(this.inventory.container)
+		this.app.stage.addChild(
+			this.worldMap.container,
+			this.gameMap.container,
+			this.inventory.container
+		)
 
-		this.gameMap.container.addChild(this.player)
+		this.gameMap.container.addChild(this.player.pixiObject)
 
 		this.gameMap.draw()
 		this.player.draw()

@@ -1,6 +1,6 @@
-import Game, { Position } from "./Game";
-import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
-import { Action } from "../Action";
+import Game, { Position } from "../components/Game";
+import MapElement, { MAP_ELEMENT_TYPE } from "../components/mapElements/MapElement";
+import { Action } from "./Action";
 import config from "../config";
 import { Sprite } from "pixi.js";
 
@@ -14,7 +14,7 @@ class Player extends MapElement {
 	private game: Game;
 	private movement: PlayerMovement;
 	private lastMovement: number;
-	private nearestObject: Sprite | null;
+	private nearestObject: MapElement | null;
 	constructor(game: Game) {
 		super({
 			image: 'players/player.png',
@@ -39,8 +39,6 @@ class Player extends MapElement {
 	}
 
 	gameLoop(delta:number) {
-		const step = config.game.tileSize;
-		// const step = delta * 2;
 		const timestamp = +new Date();
 		if (timestamp < this.lastMovement + 5) return
 		if (this.movement.horizontal !== 0) {
@@ -107,7 +105,8 @@ class Player extends MapElement {
 			x: this.nearestObject.x,
 			y: this.nearestObject.y
 		};
-		const element = this.game.gameMap?.getElementOnPosition(position)
+		const element = this.game.gameMap.getElementOnPosition(position)
+		console.log(element)
 		if (!element) return false;
 		element.doAction();
 		this.nearestObject = null;
@@ -129,13 +128,13 @@ class Player extends MapElement {
 
 	private highlightNearObject() {
 		if (this.nearestObject)
-			this.nearestObject.alpha = 1
+			this.nearestObject.pixiObject.alpha = 1
 		this.nearestObject = this.game.gameMap.getNearObject({
 			x: this.x,
 			y: this.y
 		});
 		if (this.nearestObject)
-			this.nearestObject.alpha = 0.5
+			this.nearestObject.pixiObject.alpha = 0.5
 	}
 }
 

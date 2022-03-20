@@ -21,15 +21,15 @@ export interface MapElementOptions {
 	size?: ElementSize,
 }
 
-class MapElement extends Sprite {
+class MapElement {
 	private size: ElementSize;
 	public mapPosition: Position;
 	image: string;
 	private type: MAP_ELEMENT_TYPE;
 	defaultTileSize: number;
+	private zIndex: number;
+	pixiObject: Sprite;
 	constructor(options: MapElementOptions) {
-		const texture = options.image ? Texture.from("../../assets/elements/"+options.image) : Texture.WHITE;
-		super(texture);
 		this.defaultTileSize = config.game.tileSize;
 		this.size = options?.size || {
 			width: this.defaultTileSize,
@@ -39,25 +39,63 @@ class MapElement extends Sprite {
 		this.image = options.image || ''
 		this.zIndex = options.zIndex || 2
 		this.type = typeof options.type === 'number' ? options.type : MAP_ELEMENT_TYPE.NEUTRAL;
+
+		const texture = this.image ? Texture.from("../../assets/elements/"+this.image) : Texture.WHITE;
+		this.pixiObject = new Sprite(texture)
 	}
 	public draw() {
-		this.width = this.size.width;
-		this.height = this.size.height;
-		this.x = this.mapPosition.x * this.defaultTileSize;
-		this.y = this.mapPosition.y * this.defaultTileSize;
+		this.pixiObject.width = this.size.width;
+		this.pixiObject.height = this.size.height;
+		this.pixiObject.x = this.mapPosition.x * this.defaultTileSize;
+		this.pixiObject.y = this.mapPosition.y * this.defaultTileSize;
 
-		game.gameMap?.containers[this.type].addChild(this)
+		game.gameMap?.containers[this.type].addChild(this.pixiObject)
 	}
 
 	getPosition(): Position {
 		return {
-			x: Math.floor(this.x / this.defaultTileSize),
-			y: Math.floor(this.y / this.defaultTileSize),
+			x: Math.floor(this.pixiObject.x / this.defaultTileSize),
+			y: Math.floor(this.pixiObject.y / this.defaultTileSize),
 		}
 	}
 
 	doAction() {
 		console.log('doAction')
+	}
+
+	get x() {
+		return this.pixiObject.x
+	}
+	set x(val) {
+		this.pixiObject.x = val
+	}
+
+	get y() {
+		return this.pixiObject.y
+	}
+	set y(val) {
+		this.pixiObject.y = val
+	}
+
+	get width() {
+		return this.pixiObject.width
+	}
+	set width(val) {
+		this.pixiObject.width = val
+	}
+
+	get height() {
+		return this.pixiObject.height
+	}
+	set height(val) {
+		this.pixiObject.height = val
+	}
+
+	destroy() {
+		game.gameMap.containers[this.type].removeChild(this.pixiObject)
+		game.gameMap.layers[this.type] = game.gameMap.layers[this.type]
+			.filter((el: MapElement) => !(el.x === this.x && el.y === this.y) )
+		this.pixiObject.destroy();
 	}
 }
 

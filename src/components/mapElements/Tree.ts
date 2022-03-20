@@ -24,7 +24,7 @@ class Tree extends MapElement {
 
 	draw() {
 		super.draw();
-		this.anchor.set(0, 0.3)
+		this.pixiObject.anchor.set(0, 0.3)
 	}
 
 	doAction() {
@@ -35,9 +35,7 @@ class Tree extends MapElement {
 		})
 		game.inventory?.addItem(wood)
 
-		this.destroy();
-
-		game.gameMap.containers[MAP_ELEMENT_TYPE.FOREGROUND].removeChild(this)
+		this.destroy()
 	}
 }
 

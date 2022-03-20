@@ -1,4 +1,4 @@
-import { game } from "./index";
+import { game } from "../index";
 
 interface ActionsOptions {
 	type: string;
@@ -12,7 +12,8 @@ export class Action {
 	process() {
 		switch (this.type) {
 			case 'exitFromLocation':
-				// game.gameMap.container.visible = false;
+				game.gameMap.container.visible = false;
+				game.worldMap.show()
 		}
 	}
 }
