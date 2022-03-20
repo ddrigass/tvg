@@ -32,10 +32,12 @@ class Tree extends MapElement {
 
 		const wood = new InventoryItem({
 			name: 'wood',
+			count: 20,
 		})
-		game.inventory?.addItem(wood)
+		const added = game.inventory?.addItem(wood)
 
-		this.destroy()
+		if (added)
+			this.destroy()
 	}
 }
 

@@ -1,7 +1,6 @@
 body {
     overflow: hidden;
     margin: 0 auto;
-    background-color: black;
 }
 
 #menu {
@@ -15,4 +14,12 @@ body {
 
 .hidden {
 	display: none;
+}
+
+.toastify {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	left: 0;
+	background-color: yellowgreen;
 }

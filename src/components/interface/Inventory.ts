@@ -3,9 +3,11 @@ import Game from "../Game";
 import { InventoryItem } from "./InventoryItem";
 import config from "../../config";
 import { InterfaceWindow } from "./InterfaceWindow";
+import { Action } from "../../entities/Action";
 
 class Inventory extends InterfaceWindow {
 	private items: InventoryItem[];
+	private maxItemsCount = 20;
 	constructor(game: Game) {
 		super(game, 'Inventory');
 		this.items = [];
@@ -34,20 +36,28 @@ class Inventory extends InterfaceWindow {
 		const inventoryItems = new Container()
 		inventoryItems.y = 50
 		this.items.forEach((item, index) => {
-			const countInRow = Math.round(this.container.width / config.inventory.itemSize);
+			const countInRow = Math.floor(this.container.width / config.inventory.itemSize);
 			item.pixiObject.x = (index % countInRow) * config.inventory.itemSize
-			item.pixiObject.y = Math.round(index / countInRow) * config.inventory.itemSize
+			item.pixiObject.y = Math.floor(index / countInRow) * config.inventory.itemSize
 			inventoryItems.addChild(item.pixiObject)
 		})
 		this.container.addChild(inventoryItems)
 	}
 
-	addItem(item: InventoryItem) {
+	addItem(item: InventoryItem): Boolean {
 		const addedToExist = this.items.find(el => {
 			return el.name === item.name && el.count < 20;
 		})?.addCount(item.count);
+		if (this.items.length > this.maxItemsCount) {
+			new Action({
+				type: "text",
+				text: "Inventory full!",
+			}).process();
+			return false;
+		}
 		if (!addedToExist)
 			this.items.push(item)
+		return true;
 	}
 
 	private hide() {
