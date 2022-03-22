@@ -1,28 +1,24 @@
-# Top View Game
+# tvg
 
-## Just game for walk and some craft, fights etc.
-
-## Get started
-For now you can try game only in local.
-
-## Run and go
-
-```shell
-npm i
-npm run start
+## Project setup
 ```
-Will be opened window in browser, here u can try to play.
+npm install
+```
 
-## Todo
-* static map
-* world (change location in global map)
-* craft
-* fights
-* other locations (stone world, city's)
-* ✅ may be free controls (without bindings to tiles)
-* multiplayer
-* graphics optimization (chunks, etc.)
-* animations
-* change player skin
-* npc like trader
-* money/resources
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
