@@ -20,7 +20,7 @@
   },
   "_moduleAliases": {
     "@": "./",
-    "@common": "../common"
+    "@common": "./common"
   },
   "dependencies": {
     "@nestjs/common": "8.2.3",

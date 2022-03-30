@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./*"],
-      "@common/*": ["../common/*"]
+      "@common/*": ["common/*"]
     }
   },
   "include": ["src/**/*"]

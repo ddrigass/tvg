@@ -3,7 +3,7 @@ module.exports = {
     configureWebpack: {
         resolve: {
             alias: {
-                '@common': path.join(__dirname, 'common/')
+                '@common': path.join(__dirname, 'tvg-server/common/')
             }
         }
     }

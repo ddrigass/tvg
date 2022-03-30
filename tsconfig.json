@@ -18,7 +18,7 @@
     ],
     "paths": {
       "@/*": ["src/*"],
-      "@common/*": ["common/*"]
+      "@common/*": ["tvg-server/common/*"]
     },
     "lib": [
       "esnext",
