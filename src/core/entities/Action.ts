@@ -1,5 +1,4 @@
-import { game } from "../index";
-import Toastify from 'toastify-js'
+import game from "@/core/Game";
 
 interface ActionsOptions {
 	type: string;
@@ -20,9 +19,10 @@ export class Action {
 				game.worldMap.show()
 				break;
 			case 'text':
-				Toastify({
-					text: this.text
-				}).showToast()
+				// Toastify({
+				// 	text: this.text
+				// }).showToast()
+				console.log('Тут должен быть тост', this.text)
 				break;
 		}
 	}

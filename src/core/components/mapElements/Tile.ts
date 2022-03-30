@@ -1,4 +1,5 @@
-import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "./MapElement";
+import MapElement, { MapElementOptions } from "./MapElement";
+import { MAP_ELEMENT_TYPE } from "@common/enums/MAP_ELEMENT_TYPE";
 
 interface TileOptions extends MapElementOptions {
 	tileType: String;

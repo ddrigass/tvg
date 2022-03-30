@@ -1,30 +1,40 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+	<div id="app">
+		<router-view/>
+	</div>
 </template>
 
-<style>
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+body {
+	margin: 0;
+	overflow: hidden;
 }
 </style>
+
+<script lang="ts">
+import bus from "@/core/bus";
+import router from "@/router";
+
+export default {
+	name: 'App',
+	mounted() {
+		bus.$emit('init')
+		if (router.currentRoute.path !== '/')
+			router.replace('/')
+
+		bus.$on('initiated', () => {
+			router.replace('login')
+		})
+		bus.$on('loggedIn', () => {
+			router.replace('game')
+		})
+	}
+}
+</script>

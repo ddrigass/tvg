@@ -14,4 +14,7 @@ export default {
 			cross: ""
 		}
 	},
+	server: {
+		address: 'localhost:3030'
+	},
 }

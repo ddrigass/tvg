@@ -1,6 +1,6 @@
-import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "./MapElement";
-import { game } from "../../index";
-import { InventoryItem } from "../interface/InventoryItem";
+import MapElement, { MapElementOptions } from "./MapElement";
+import game from "@/core/Game";
+import { MAP_ELEMENT_TYPE } from "@common/enums/MAP_ELEMENT_TYPE";
 
 interface TreeOptions extends MapElementOptions {
 }
@@ -30,14 +30,16 @@ class Tree extends MapElement {
 	doAction() {
 		super.doAction();
 
-		const wood = new InventoryItem({
-			name: 'wood',
-			count: 20,
-		})
-		const added = game.inventory?.addItem(wood)
+		console.log('todo: add to inventory')
 
-		if (added)
-			this.destroy()
+		// const wood = new InventoryItem({
+		// 	name: 'wood',
+		// 	count: 20,
+		// })
+		// const added = game.inventory?.addItem(wood)
+
+		// if (added)
+		// 	this.destroy()
 	}
 }
 

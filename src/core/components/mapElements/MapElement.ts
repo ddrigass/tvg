@@ -1,28 +1,19 @@
-import { game } from '../../index'
+import game, { Position } from '@/core/Game'
 import { Sprite, Texture } from "pixi.js";
-import { Position } from "../Game";
 import config from "../../config";
+import { EntitySize } from "@common/EntitySize";
+import { MAP_ELEMENT_TYPE } from "@common/enums/MAP_ELEMENT_TYPE";
 
-export enum MAP_ELEMENT_TYPE {
-	BACKGROUND,
-	NEUTRAL,
-	FOREGROUND
-}
-
-export interface ElementSize {
-	width: number;
-	height: number;
-}
 export interface MapElementOptions {
 	position: Position,
 	type?: MAP_ELEMENT_TYPE;
 	zIndex?: number;
 	image?: string;
-	size?: ElementSize,
+	size?: EntitySize,
 }
 
 class MapElement {
-	private size: ElementSize;
+	private size: EntitySize;
 	public mapPosition: Position;
 	image: string;
 	private type: MAP_ELEMENT_TYPE;
@@ -40,7 +31,8 @@ class MapElement {
 		this.zIndex = options.zIndex || 2
 		this.type = typeof options.type === 'number' ? options.type : MAP_ELEMENT_TYPE.NEUTRAL;
 
-		const texture = this.image ? Texture.from("../../assets/elements/"+this.image) : Texture.WHITE;
+		const image = require("@/assets/elements/"+this.image);
+		const texture = this.image ? Texture.from(image) : Texture.WHITE;
 		this.pixiObject = new Sprite(texture)
 	}
 	public draw() {

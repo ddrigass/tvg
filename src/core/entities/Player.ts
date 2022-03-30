@@ -1,8 +1,8 @@
-import Game, { Position } from "../components/Game";
-import MapElement, { MAP_ELEMENT_TYPE } from "../components/mapElements/MapElement";
+import { Position, Game } from "../Game";
+import MapElement  from "../components/mapElements/MapElement";
 import { Action } from "./Action";
-import config from "../config";
-import { Sprite } from "pixi.js";
+import bus from "@/core/bus";
+import { MAP_ELEMENT_TYPE } from "@common/enums/MAP_ELEMENT_TYPE";
 
 
 interface PlayerMovement {
@@ -10,11 +10,31 @@ interface PlayerMovement {
 	vertical: number;
 }
 
+interface StepPositionOptions {
+	position: Position;
+	id: number;
+}
+
+class StepPosition {
+	id: number;
+	approved: Boolean;
+	position: Position;
+	constructor(options: StepPositionOptions) {
+		this.id = options.id;
+		this.position = options.position;
+		this.approved = false;
+	}
+	approve() {
+		this.approved = true;
+	}
+}
+
 class Player extends MapElement {
 	private game: Game;
 	private movement: PlayerMovement;
 	private lastMovement: number;
 	private nearestObject: MapElement | null;
+	private steps: StepPosition[];
 	constructor(game: Game) {
 		super({
 			image: 'players/player.png',
@@ -32,6 +52,7 @@ class Player extends MapElement {
 		this.lastMovement = 0;
 		this.nearestObject = null
 		this.game = game;
+		this.steps = [];
 
 		this.onKeyDown = this.onKeyDown.bind(this)
 		this.onKeyUp = this.onKeyUp.bind(this)
@@ -57,9 +78,9 @@ class Player extends MapElement {
 		}
 	}
 
-	removeControlsEvent() {
-		document.removeEventListener('keydown', this.onKeyDown)
-	}
+	// removeControlsEvent() {
+	// 	document.removeEventListener('keydown', this.onKeyDown)
+	// }
 
 	initControlsEvents() {
 		document.addEventListener('keydown', this.onKeyDown)
@@ -111,18 +132,18 @@ class Player extends MapElement {
 		this.nearestObject = null;
 	}
 
-	private async goTo(position: Position) {
+	private goTo(position: Position) {
 		const collision = this.game.gameMap?.checkCollision(position)
 		if (collision instanceof Action) {
 			collision.process()
 		}
 		if (collision === true) {
-			this.x = position.x
-			this.y = position.y
+			bus.$emit('move', position)
+
 			this.highlightNearObject()
 		}
 
-		await this.game.gameMap.moveOnLeaveFromVisible()
+		this.game.gameMap.moveOnLeaveFromVisible()
 	}
 
 	private highlightNearObject() {

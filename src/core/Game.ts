@@ -1,29 +1,23 @@
-import { Application, Container, DisplayObject, settings } from "pixi.js";
-import "../style.css";
-import GameMap from "./GameMap";
-import Player from "../entities/Player";
-import Menu from "./menuElements/Menu";
-import Inventory from "./interface/Inventory";
-import { WorldMap } from "./mapElements/WorldMap";
-
-declare const VERSION: string;
-
-console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
+import { Application, settings } from "pixi.js";
+import GameMap from "./components/GameMap";
+import Player from "./entities/Player";
+import { WorldMap } from "./components/mapElements/WorldMap";
 
 export interface Position {
 	x: number;
 	y: number;
 }
 
-class Game {
+export class Game {
     app: Application;
+	private selector: string;
+
     public options: any;
-	player: Player;
 	public gameMap: GameMap;
-	private menu?: Menu;
-	inventory: Inventory;
-	worldMap: WorldMap;
-    constructor() {
+	public player: Player;
+	public worldMap: WorldMap;
+
+	constructor(selector: string) {
         this.options = {
             fps: 60,
             map: {
@@ -31,12 +25,12 @@ class Game {
                 height: 100
             }
         };
+		this.selector = selector;
 		settings.SORTABLE_CHILDREN = true;
         this.app = new Application({
             backgroundColor: 0xd3d3d3,
             resizeTo: window,
         });
-        document.body.appendChild(this.app.view);
 
         // @ts-ignore
         window.$GAME = this;
@@ -44,23 +38,24 @@ class Game {
 		this.worldMap = new WorldMap(this);
 		this.gameMap = new GameMap(this);
 		this.player = new Player(this);
-		this.menu = new Menu(this);
-		this.inventory = new Inventory(this);
     }
+
+	append() {
+		document.querySelector(this.selector)!.appendChild(this.app.view);
+	}
+
     init() {
 		this.app.stage.addChild(
 			this.worldMap.container,
 			this.gameMap.container,
-			this.inventory.container
 		)
 
 		this.gameMap.container.addChild(this.player.pixiObject)
 
 		this.gameMap.draw()
 		this.player.draw()
-		this.inventory.draw()
 
-		this.app.ticker.add(delta => this.gameLoop(delta));
+		this.app.ticker.add((delta:number) => this.gameLoop(delta));
     }
 
 	private gameLoop(delta: number) {
@@ -68,4 +63,5 @@ class Game {
 	}
 }
 
-export default Game;
+const game = new Game('#game');
+export default game;

@@ -1,13 +1,15 @@
-import Game, { Position } from "./Game";
+import { Position, Game } from "@/core/Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
-import { Container, DisplayObject, ParticleContainer, Sprite, Texture } from "pixi.js";
-import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
+import { Container, ParticleContainer } from "pixi.js";
+import MapElement  from "./mapElements/MapElement";
 import { Action } from "../entities/Action";
 import config from "../config";
+import { MAP_ELEMENT_TYPE } from "@common/enums/MAP_ELEMENT_TYPE";
+import { MapOptions } from "@common/IMap";
 
 
-interface GameMapOptions {
+interface GameMapOptions extends MapOptions {
 	dragged: boolean;
 }
 
@@ -21,6 +23,7 @@ class GameMap {
 	constructor(game: Game) {
 		this.game = game;
 		this.options = {
+			size: null,
 			dragged: false,
 		};
 
@@ -31,7 +34,7 @@ class GameMap {
 		this.onMouseMove = this.onMouseMove.bind(this);
 
 		this.initDragEvents();
-		this.fillMap();
+		// this.fillMap();
 		this.containers = {};
 
 		const maxSize = this.game.options.map.height * this.game.options.map.width * 50;
@@ -40,7 +43,7 @@ class GameMap {
 		this.containers[MAP_ELEMENT_TYPE.FOREGROUND] = new Container();
 
 		this.container = new Container();
-		for (let i in this.containers) {
+		for (const i in this.containers) {
 			const container = this.containers[i];
 			this.container.addChild(container);
 		}
@@ -53,10 +56,42 @@ class GameMap {
 	// }
 
 	draw() {
-		for (let i in this.layers) {
+		for (const i in this.layers) {
 			const layer = this.layers[i]
-			for (let element of layer) {
+			for (const element of layer) {
 				element?.draw();
+			}
+		}
+	}
+
+	fillMap() {
+		const height = this.game.options.map.height;
+		const width = this.game.options.map.width;
+
+		for (const layer in MAP_ELEMENT_TYPE) {
+			if (!isNaN(Number(layer))) {
+				this.layers[layer] = [];
+			}
+		}
+
+		for (let i = 0; i < height; i++) {
+			for (let t = 0; t < width; t++) {
+				const position = {
+					x: t,
+					y: i,
+				};
+				const tile = new Tile({
+					tileType: "grass",
+					position,
+				});
+
+				const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
+
+				if (hasTree)
+					this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new Tree({ position }));
+
+
+				this.layers[MAP_ELEMENT_TYPE.BACKGROUND].push(tile);
 			}
 		}
 	}
@@ -101,38 +136,6 @@ class GameMap {
 		// console.log(JSON.stringify(this.options.background));
 	}
 
-	fillMap() {
-		const height = this.game.options.map.height;
-		const width = this.game.options.map.width;
-
-		for (let layer in MAP_ELEMENT_TYPE) {
-			if (!isNaN(Number(layer))) {
-				this.layers[layer] = [];
-			}
-		}
-
-		for (let i = 0; i < height; i++) {
-			for (let t = 0; t < width; t++) {
-				const position = {
-					x: t,
-					y: i,
-				};
-				const tile = new Tile({
-					tileType: "grass",
-					position,
-				});
-
-				const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
-
-				if (hasTree)
-					this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new Tree({ position }));
-
-
-				this.layers[MAP_ELEMENT_TYPE.BACKGROUND].push(tile);
-			}
-		}
-	}
-
 	getElementOnPosition(position: Position): MapElement | null {
 		return this.layers[MAP_ELEMENT_TYPE.FOREGROUND].find((el: MapElement | null) => {
 			return el && el.x === position.x && el.y === position.y
@@ -153,7 +156,7 @@ class GameMap {
 	}
 
 
-	async moveTo(position: Position) {
+	moveTo(position: Position) {
 		this.container = Object.assign(this.container, position);
 	}
 
@@ -184,7 +187,7 @@ class GameMap {
 	}
 
 
-	async moveOnLeaveFromVisible() {
+	moveOnLeaveFromVisible() {
 		if (this.options.dragged) return;
 
 		const playerWidth = this.game.player.width;
@@ -196,25 +199,25 @@ class GameMap {
 		const mapWidth = this.game.app.renderer.width;
 		const mapHeight = this.game.app.renderer.height;
 		if (playerXInGame - playerWidth < mapX) {
-			await this.moveTo({
+			this.moveTo({
 				x: -(playerXInGame - mapWidth / 2),
 				y: -mapY,
 			});
 		}
 		if (playerXInGame + playerWidth > mapX + mapWidth) {
-			await this.moveTo({
+			this.moveTo({
 				x: -(playerXInGame - mapWidth / 2),
 				y: -mapY,
 			});
 		}
 		if (playerYInGame - playerHeight < mapY) {
-			await this.game.gameMap.moveTo({
+			this.game.gameMap.moveTo({
 				x: -mapX,
 				y: -(playerYInGame - mapHeight / 2),
 			});
 		}
 		if (playerYInGame + playerHeight > mapY + mapHeight) {
-			await this.game.gameMap.moveTo({
+			this.game.gameMap.moveTo({
 				x: -mapX,
 				y: -(playerYInGame - mapHeight / 2),
 			});
