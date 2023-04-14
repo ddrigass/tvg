@@ -1,14 +1,35 @@
-import Game, { Position } from "./Game";
+import Game, {Position} from "./Game";
 import Tile from "./mapElements/Tile";
 import Tree from "./mapElements/Tree";
-import { Container, DisplayObject, ParticleContainer, Sprite, Texture } from "pixi.js";
-import MapElement, { MAP_ELEMENT_TYPE } from "./mapElements/MapElement";
-import { Action } from "../entities/Action";
+import {Container, ParticleContainer} from "pixi.js";
+import MapElement, {MAP_ELEMENT_TYPE} from "./mapElements/MapElement";
+import {Action} from "../entities/Action";
 import config from "../config";
+import {WORLD_LOCATIONS} from "./mapElements/WorldMap";
 
 
 interface GameMapOptions {
 	dragged: boolean;
+}
+
+interface MapSettings {
+	name: string;
+	sizes: {
+		"width": number;
+		"height": number;
+	}
+	background: {
+		items: {
+			material:string;
+			collision:Boolean
+		}[][]
+	}
+	foreground: {
+		items: {
+			material:string;
+			collision:Boolean
+		}[][]
+	}
 }
 
 class GameMap {
@@ -17,6 +38,7 @@ class GameMap {
 	containers: any;
 	container: Container;
 	layers: any;
+	private mapSettings!: MapSettings;
 
 	constructor(game: Game) {
 		this.game = game;
@@ -31,10 +53,9 @@ class GameMap {
 		this.onMouseMove = this.onMouseMove.bind(this);
 
 		this.initDragEvents();
-		this.fillMap();
 		this.containers = {};
 
-		const maxSize = this.game.options.map.height * this.game.options.map.width * 50;
+		const maxSize = this.height * this.width * 50;
 		this.containers[MAP_ELEMENT_TYPE.NEUTRAL] = new Container();
 		this.containers[MAP_ELEMENT_TYPE.BACKGROUND] = new ParticleContainer(maxSize, {});
 		this.containers[MAP_ELEMENT_TYPE.FOREGROUND] = new Container();
@@ -44,6 +65,8 @@ class GameMap {
 			const container = this.containers[i];
 			this.container.addChild(container);
 		}
+
+		this.hide();
 	}
 
 	// private loadMap() {
@@ -101,9 +124,13 @@ class GameMap {
 		// console.log(JSON.stringify(this.options.background));
 	}
 
+	private setMap(location: WORLD_LOCATIONS) {
+		this.mapSettings = require(`../maps/${location}.json`);
+	}
+
 	fillMap() {
-		const height = this.game.options.map.height;
-		const width = this.game.options.map.width;
+		const height = this.height;
+		const width = this.width;
 
 		for (let layer in MAP_ELEMENT_TYPE) {
 			if (!isNaN(Number(layer))) {
@@ -113,19 +140,28 @@ class GameMap {
 
 		for (let i = 0; i < height; i++) {
 			for (let t = 0; t < width; t++) {
+
+				const elementBackground = this.mapSettings.background.items[i][t];
+
 				const position = {
 					x: t,
 					y: i,
 				};
 				const tile = new Tile({
-					tileType: "grass",
+					tileType: elementBackground['material'],
 					position,
 				});
 
-				const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
 
-				if (hasTree)
+				const elementForeground = this.mapSettings.foreground.items?.[i]?.[t];
+
+				if (elementForeground) {
 					this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new Tree({ position }));
+				}
+
+				// const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
+				//
+				// if (hasTree)
 
 
 				this.layers[MAP_ELEMENT_TYPE.BACKGROUND].push(tile);
@@ -141,8 +177,8 @@ class GameMap {
 
 	checkCollision(position: Position) {
 		const tileSize = config.game.tileSize;
-		const mapWidth = this.game.options.map.width * tileSize;
-		const mapHeight = this.game.options.map.height * tileSize;
+		const mapWidth = this.width * tileSize;
+		const mapHeight = this.height * tileSize;
 		if (
 			(position.x < 0 || position.y < 0)
 			|| (position.x > mapWidth || position.y > mapHeight)
@@ -218,6 +254,38 @@ class GameMap {
 				x: -mapX,
 				y: -(playerYInGame - mapHeight / 2),
 			});
+		}
+	}
+
+	public hide() {
+		this.container.visible = false;
+	}
+
+	public show() {
+		this.container.visible = true;
+	}
+
+	setLocation(location: WORLD_LOCATIONS) {
+		this.setMap(location);
+		this.clearMap();
+		this.fillMap();
+		this.draw()
+	}
+
+	get height() {
+		return this.mapSettings?.sizes?.height ?? 40;
+	}
+
+	get width() {
+		return this.mapSettings?.sizes?.width ?? 40;
+	}
+
+	private clearMap() {
+		for (let i in this.layers) {
+			const layer = this.layers[i]
+			for (let element of layer) {
+				element?.destroy();
+			}
 		}
 	}
 }

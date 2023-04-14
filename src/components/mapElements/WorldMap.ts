@@ -1,10 +1,10 @@
 import Game from "../Game";
 import { Container, Text } from "pixi.js";
 
-enum WORLD_LOCATIONS {
-	FOREST,
-	MOUNTAINS,
-	SHELTER
+export enum WORLD_LOCATIONS {
+	FOREST = 'forest',
+	MOUNTAINS = 'mountains',
+	SHELTER = 'awd'
 }
 export class WorldMap {
 	private game: Game;
@@ -33,20 +33,12 @@ export class WorldMap {
 		shelterLocationTitle.on('click', () => this.selectLocation(WORLD_LOCATIONS.SHELTER))
 
 		this.container.addChild(forestLocationTitle, mountainsLocationTitle, shelterLocationTitle)
-
-		this.hide()
 	}
 
 	private selectLocation(location: WORLD_LOCATIONS) {
-		console.log(location)
-		switch (location) {
-			case WORLD_LOCATIONS.FOREST:
-				this.hide()
-				this.game.gameMap.container.visible = true
-				break;
-			default:
-				break;
-		}
+		this.hide()
+		this.game.gameMap.show()
+		this.game.gameMap.setLocation(location)
 	}
 
 	hide() {

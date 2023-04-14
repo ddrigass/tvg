@@ -25,11 +25,7 @@ class Game {
 	worldMap: WorldMap;
     constructor() {
         this.options = {
-            fps: 60,
-            map: {
-                width: 100,
-                height: 100
-            }
+            fps: 60
         };
 		settings.SORTABLE_CHILDREN = true;
         this.app = new Application({
@@ -56,7 +52,6 @@ class Game {
 
 		this.gameMap.container.addChild(this.player.pixiObject)
 
-		this.gameMap.draw()
 		this.player.draw()
 		this.inventory.draw()
 

@@ -16,7 +16,7 @@ export class Action {
 	process() {
 		switch (this.type) {
 			case 'exitFromLocation':
-				game.gameMap.container.visible = false;
+				game.gameMap.hide()
 				game.worldMap.show()
 				break;
 			case 'text':
