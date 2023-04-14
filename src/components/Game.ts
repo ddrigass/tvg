@@ -15,6 +15,13 @@ export interface Position {
 	y: number;
 }
 
+export interface BoxPosition {
+	x1: number;
+	y1: number;
+	x2: number;
+	y2: number;
+}
+
 class Game {
     app: Application;
     public options: any;
@@ -58,8 +65,8 @@ class Game {
 		this.app.ticker.add(delta => this.gameLoop(delta));
     }
 
-	private gameLoop(delta: number) {
-		this.player?.gameLoop(delta)
+	private async gameLoop(delta: number) {
+		await this.player?.gameLoop(delta)
 	}
 }
 

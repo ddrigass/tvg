@@ -19,8 +19,8 @@ class Player extends MapElement {
 		super({
 			image: 'players/player.png',
 			position: {
-				x: 0,
-				y: 0
+				x: 1,
+				y: 1
 			},
 			zIndex: 2,
 			type: MAP_ELEMENT_TYPE.NEUTRAL
@@ -38,18 +38,18 @@ class Player extends MapElement {
 		this.initControlsEvents();
 	}
 
-	gameLoop(delta:number) {
+	async gameLoop(delta: number) {
 		const timestamp = +new Date();
 		if (timestamp < this.lastMovement + 5) return
 		if (this.movement.horizontal !== 0) {
-			this.goTo({
+			await this.goTo({
 				x: this.x + this.movement.horizontal * 3 * delta,
 				y: this.y
 			})
 			this.lastMovement = timestamp;
 		}
 		if (this.movement.vertical !== 0) {
-			this.goTo({
+			await this.goTo({
 				x: this.x,
 				y: this.y + this.movement.vertical * 3 * delta
 			})
@@ -101,24 +101,28 @@ class Player extends MapElement {
 
 	doAction() {
 		if (!this.nearestObject) return false;
-		const position = {
-			x: this.nearestObject.x,
-			y: this.nearestObject.y
-		};
-		const element = this.game.gameMap.getElementOnPosition(position)
-		if (!element) return false;
-		element.doAction();
+		// const position = {
+		// 	x: this.nearestObject.x,
+		// 	y: this.nearestObject.y
+		// };
+		// const element = this.game.gameMap.getElementOnPosition(position)
+		// console.log(element);
+		// if (!element) return false;
+		this.nearestObject?.doAction();
 		this.nearestObject = null;
 	}
 
-	private async goTo(position: Position) {
-		const collision = this.game.gameMap?.checkCollision(position)
+	private async goTo(to: Position) {
+		const collision = this.game.gameMap?.checkCollision(this,{
+			x: to.x,
+			y: to.y
+		})
 		if (collision instanceof Action) {
 			collision.process()
 		}
 		if (collision === true) {
-			this.x = position.x
-			this.y = position.y
+			this.x = to.x
+			this.y = to.y
 			this.highlightNearObject()
 		}
 
@@ -132,7 +136,7 @@ class Player extends MapElement {
 			x: this.x,
 			y: this.y
 		});
-		if (this.nearestObject)
+		if (this?.nearestObject?.actionable)
 			this.nearestObject.pixiObject.alpha = 0.5
 	}
 }

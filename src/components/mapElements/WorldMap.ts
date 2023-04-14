@@ -4,7 +4,7 @@ import { Container, Text } from "pixi.js";
 export enum WORLD_LOCATIONS {
 	FOREST = 'forest',
 	MOUNTAINS = 'mountains',
-	SHELTER = 'awd'
+	SHELTER = 'shelter'
 }
 export class WorldMap {
 	private game: Game;
@@ -37,8 +37,9 @@ export class WorldMap {
 
 	private selectLocation(location: WORLD_LOCATIONS) {
 		this.hide()
-		this.game.gameMap.show()
 		this.game.gameMap.setLocation(location)
+		this.game.gameMap.show()
+		this.game.player.setPosition({ x: 1, y:1 })
 	}
 
 	hide() {

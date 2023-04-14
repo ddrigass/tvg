@@ -19,16 +19,24 @@ export interface MapElementOptions {
 	zIndex?: number;
 	image?: string;
 	size?: ElementSize,
+	collision?: boolean;
 }
 
 class MapElement {
-	private size: ElementSize;
+	public pixiObject: Sprite;
 	public mapPosition: Position;
-	image: string;
+	public actionable: boolean = false;
+	public collision: boolean = false;
+
+	private size: ElementSize;
 	private type: MAP_ELEMENT_TYPE;
-	defaultTileSize: number;
 	private zIndex: number;
-	pixiObject: Sprite;
+	private image: string;
+
+	protected widthOffset: number = 0;
+	protected heightOffset: number = 0;
+
+	defaultTileSize: number;
 	constructor(options: MapElementOptions) {
 		this.defaultTileSize = config.game.tileSize;
 		this.size = options?.size || {
@@ -59,33 +67,38 @@ class MapElement {
 		}
 	}
 
+	setPosition(position: Position) {
+		this.pixiObject.x = this.defaultTileSize * position.x
+		this.pixiObject.y = this.defaultTileSize * position.y
+	}
+
 	doAction() {
 		console.log('doAction')
 	}
 
 	get x() {
-		return this.pixiObject.x
+		return this.pixiObject.x + this.widthOffset
 	}
 	set x(val) {
 		this.pixiObject.x = val
 	}
 
 	get y() {
-		return this.pixiObject.y
+		return this.pixiObject.y + this.heightOffset
 	}
 	set y(val) {
 		this.pixiObject.y = val
 	}
 
 	get width() {
-		return this.pixiObject.width
+		return this.pixiObject.width - this.widthOffset - 10
 	}
 	set width(val) {
 		this.pixiObject.width = val
 	}
 
 	get height() {
-		return this.pixiObject.height
+		return this.pixiObject.height - this.heightOffset - 10
 	}
 	set height(val) {
 		this.pixiObject.height = val

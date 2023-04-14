@@ -1,11 +1,13 @@
-import Game, {Position} from "./Game";
+import Game, {BoxPosition, Position} from "./Game";
 import Tile from "./mapElements/Tile";
-import Tree from "./mapElements/Tree";
+import Tree from "./mapElements/objects/Tree";
 import {Container, ParticleContainer} from "pixi.js";
 import MapElement, {MAP_ELEMENT_TYPE} from "./mapElements/MapElement";
 import {Action} from "../entities/Action";
 import config from "../config";
 import {WORLD_LOCATIONS} from "./mapElements/WorldMap";
+import Stone from "./mapElements/objects/Stone";
+import House from "./mapElements/objects/House";
 
 
 interface GameMapOptions {
@@ -20,17 +22,25 @@ interface MapSettings {
 	}
 	background: {
 		items: {
-			material:string;
-			collision:Boolean
+			material: string;
+			collision: boolean;
 		}[][]
 	}
 	foreground: {
 		items: {
-			material:string;
-			collision:Boolean
+			object: string;
+			collision: boolean;
 		}[][]
 	}
 }
+
+export const MapObjects = {
+	tree: Tree,
+	stone: Stone,
+	house: House,
+} as {
+	[name: string]: typeof MapElement;
+};
 
 class GameMap {
 	private game: Game;
@@ -121,7 +131,7 @@ class GameMap {
 	}
 
 	private logMap() {
-		// console.log(JSON.stringify(this.options.background));
+		// console.log(this.layers);
 	}
 
 	private setMap(location: WORLD_LOCATIONS) {
@@ -155,13 +165,16 @@ class GameMap {
 
 				const elementForeground = this.mapSettings.foreground.items?.[i]?.[t];
 
-				if (elementForeground) {
-					this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new Tree({ position }));
-				}
-
 				// const hasTree = !(i % 3) && !((t + Math.floor(Math.random() * 10)) % 3);
-				//
-				// if (hasTree)
+				if (elementForeground) {
+					const ObjectClass = this.getMapObject(elementForeground['object'])
+					if (ObjectClass) {
+						this.layers[MAP_ELEMENT_TYPE.FOREGROUND].push(new ObjectClass({
+							position,
+							collision: elementForeground['collision'] ?? false
+						}));
+					}
+				}
 
 
 				this.layers[MAP_ELEMENT_TYPE.BACKGROUND].push(tile);
@@ -169,13 +182,48 @@ class GameMap {
 		}
 	}
 
+	getMapObject(name: string): typeof MapElement | null{
+		return MapObjects[name] ?? null;
+	}
+
 	getElementOnPosition(position: Position): MapElement | null {
 		return this.layers[MAP_ELEMENT_TYPE.FOREGROUND].find((el: MapElement | null) => {
-			return el && el.x === position.x && el.y === position.y
+			return el
+				&& position.x >= el.x
+				&& position.x <= (el.x + el.width)
+				&& position.y >= el.y
+				&& position.y <= el.y + el.height
 		})
 	}
 
-	checkCollision(position: Position) {
+	getElementOnBox(position: BoxPosition): MapElement | null {
+		const positions = [
+			{
+				x: position.x1,
+				y: position.y1
+			},
+			{
+				x: position.x1,
+				y: position.y2
+			},
+			{
+				x: position.x2,
+				y: position.y1
+			},
+			{
+				x: position.x2,
+				y: position.y2
+			}
+		]
+
+		for (let pos of positions) {
+			const el = this.getElementOnPosition(pos);
+			if (el) return el;
+		}
+		return null;
+	}
+
+	checkCollision(element: MapElement, position: Position) {
 		const tileSize = config.game.tileSize;
 		const mapWidth = this.width * tileSize;
 		const mapHeight = this.height * tileSize;
@@ -185,6 +233,17 @@ class GameMap {
 		) {
 			return new Action({ type: "exitFromLocation" });
 		}
+
+		const el = this.getElementOnBox({
+			x1: position.x,
+			y1: position.y,
+			x2: position.x + element.width,
+			y2: position.y + element.height,
+		});
+		if (el) {
+			return el?.collision;
+		}
+
 		return true;
 	}
 

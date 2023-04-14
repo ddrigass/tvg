@@ -1,11 +1,13 @@
-import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "./MapElement";
-import { game } from "../../index";
-import { InventoryItem } from "../interface/InventoryItem";
+import MapElement, { MAP_ELEMENT_TYPE, MapElementOptions } from "../MapElement";
+import { game } from "../../../index";
+import { InventoryItem } from "../../interface/InventoryItem";
 
 interface TreeOptions extends MapElementOptions {
 }
 
 class Tree extends MapElement {
+	public actionable = true;
+
 	constructor(options: TreeOptions) {
 		super({
 			zIndex: 3,
@@ -24,7 +26,7 @@ class Tree extends MapElement {
 
 	draw() {
 		super.draw();
-		this.pixiObject.anchor.set(0, 0.3)
+		this.heightOffset = 25;
 	}
 
 	doAction() {
