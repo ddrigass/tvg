@@ -14,11 +14,11 @@ npm run start
 Will be opened window in browser, here u can try to play.
 
 ## Todo
-* static map
-* world (change location in global map)
+* ✅ static map
+* ✅ world (change location in global map)
 * craft
 * fights
-* other locations (stone world, city's)
+* ✅ other locations (stone world, city's)
 * ✅ may be free controls (without bindings to tiles)
 * multiplayer
 * graphics optimization (chunks, etc.)
